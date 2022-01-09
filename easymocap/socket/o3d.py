@@ -73,12 +73,12 @@ class VisOpen3DSocket(BaseSocket):
         self.count = 0
         self.previous = {}
         self.critrange = CritRange(**cfg.range)
-        self.new_frames  = cfg.new_frames
+        self.new_frames = cfg.new_frames
     
     def add_human(self, zero_params):
         vertices = self.body_model(return_verts=True, return_tensor=False, **zero_params)[0]
         self.vertices.append(vertices)
-        if self.body_template is None: # create template
+        if self.body_template is None:  # create template
             mesh = create_mesh(vertices=vertices, faces=self.body_model.faces, colors=self.body_model.color)
         else:
             mesh = copy.deepcopy(self.body_template)
@@ -135,6 +135,7 @@ class VisOpen3DSocket(BaseSocket):
     def main(self, datas):
         if self.debug:log('[Info] Load data {}'.format(self.count))
         if isinstance(datas, str):
+            print(datas)
             datas = json.loads(datas)
         for data in datas:
             for key in data.keys():

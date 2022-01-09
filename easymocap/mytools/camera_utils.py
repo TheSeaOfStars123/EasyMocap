@@ -113,6 +113,13 @@ def read_camera(intri_name, extri_name, cam_names=[]):
         cams[cam]['T'] = Tvec
         P[cam] = cams[cam]['K'] @ cams[cam]['RT']
         cams[cam]['P'] = P[cam]
+        eiT = Tvec
+        eiKi =cams[cam]['invK']
+        eiRt = R.T
+        eiRtKi = eiRt @ eiKi
+        eiPos = -eiRt @ eiT
+        cams[cam]['eiRtKi'] = eiRtKi  # 3*3
+        cams[cam]['eiPos'] = eiPos  # 3*1
 
         cams[cam]['dist'] = intri.read('dist_{}'.format(cam))
     cams['basenames'] = cam_names

@@ -267,7 +267,9 @@ if __name__ == '__main__':
 
     args = parser.parse_args ()
     if args.setting == 'shelf':
-        test_range = range ( 302, 602)
+        test_range = range ( 0, 28)
+
+        # test_range = range ( 302, 602)
         # test_range = range (2000, 3200)
     elif args.setting == 'campus':
         test_range = [i for i in range ( 350, 471 )] + [i for i in range ( 650, 751 )]

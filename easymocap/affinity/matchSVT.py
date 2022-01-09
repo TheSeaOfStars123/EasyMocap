@@ -6,8 +6,10 @@
   @ FilePath: /EasyMocap/easymocap/affinity/matchSVT.py
 '''
 import numpy as np
+from .match_solver import myproj2dpam
 
-def matchSVT(M_aff, dimGroups, M_constr=None, M_obs=None, control={}):
+def matchSVT(M_aff, dimGroups, M_constr=None, M_obs=None, control={}, **kwargs):
+    dual_stochastic = kwargs.get('dual_stochastic_SVT', True)
     max_iter = control['maxIter']
     w_rank = control['w_rank']
     tol = control['tol']
@@ -45,7 +47,17 @@ def matchSVT(M_aff, dimGroups, M_constr=None, M_obs=None, control={}):
         X = X * M_constr
         if False:
             pass
-        
+
+        if dual_stochastic:
+            # Projection for double stochastic constraint
+            for i in range(len(dimGroups) - 1):
+                row_begin, row_end = int(dimGroups[i]), int(dimGroups[i + 1])
+                for j in range(len(dimGroups) - 1):
+                    col_begin, col_end = int(dimGroups[j]), int(dimGroups[j + 1])
+                    if row_end > row_begin and col_end > col_begin:
+                        X[row_begin:row_end, col_begin:col_end] = myproj2dpam(X[row_begin:row_end, col_begin:col_end],
+                                                                              1e-2)
+
         X = (X + X.T)/2
         # update Y
         Y = Y + mu * (X - Q)

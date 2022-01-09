@@ -63,6 +63,56 @@ CONFIG['smpl'] = {'nJoints': 24, 'kintree':
     ]
 }
 
+CONFIG['skel19'] = {
+    'nJoints': 19,
+    'kintree':
+       [[ 1,  0],
+        [ 2,  0],
+        [ 3,  0],
+        [ 4,  1],
+        [ 5,  1],
+        [ 6,  1],
+        [ 7,  2],
+        [ 8,  3],
+        [ 9,  4],
+        [10,  4],
+        [11, 5],
+        [12,  6],
+        [13, 7],
+        [14, 8],
+        [15,  11],
+        [16,  12],
+        [17, 14],
+        [18, 13]],
+    'joint_names': [
+        "Nose",
+        "Neck",
+        "RShoulder",
+        "RElbow",
+        "RWrist",
+        "LShoulder",
+        "LElbow",
+        "LWrist",
+        "MidHip",
+        "RHip",
+        "RKnee",
+        "RAnkle",
+        "LHip",
+        "LKnee",
+        "LAnkle",
+        "REye",
+        "LEye",
+        "REar",
+        "LEar",
+        "LBigToe",
+        "LSmallToe",
+        "LHeel",
+        "RBigToe",
+        "RSmallToe",
+        "RHeel"
+    ]
+}
+
 CONFIG['body25'] = {'nJoints': 25, 'kintree':
    [[ 1,  0],
     [ 2,  1],

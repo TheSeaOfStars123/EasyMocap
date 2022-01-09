@@ -41,16 +41,30 @@ def dist_pl_pointwise(p0, p1):
     dist = np.linalg.norm(moment_q, axis=-1)
     return dist
 
+def dist_pl_pointwise_conf(p0, p1):
+    dist = dist_pl_pointwise(p0, p1)
+    conf = np.sqrt(p0[..., -1] * p1[..., -1])  # p0(15, 4) # p1(15, 7)
+    dist = np.sum(dist * conf, axis=-1) / (1e-5 + conf.sum(axis=-1))  # (15,)
+    # dist[conf < 0.1] = 1e5
+    return dist
+
 def dist_ll_pointwise(p0, p1):
-    product = np.sum(p0[..., :3] * p1[..., 3:6], axis=-1) + np.sum(p1[..., :3] * p0[..., 3:6], axis=-1)
+    product = np.sum(p0[..., :3] * p1[..., 3:6], axis=-1) + np.sum(p1[..., :3] * p0[..., 3:6], axis=-1)  #(4, 3, 15)
     return np.abs(product)
 
 def dist_ll_pointwise_conf(p0, p1):
     dist = dist_ll_pointwise(p0, p1)
-    conf = np.sqrt(p0[..., -1] * p1[..., -1])
-    dist = np.sum(dist*conf, axis=-1)/(1e-5 + conf.sum(axis=-1))
+    conf = np.sqrt(p0[..., -1] * p1[..., -1])  # p0(4, 1, 15, 7) # p1(1, 3, 15, 7)
+    dist = np.sum(dist*conf, axis=-1)/(1e-5 + conf.sum(axis=-1))  # (4, 3)
     dist[conf.sum(axis=-1)<0.1] = 1e5
     return dist
+
+def convert_Qc2Qg(Qc, R, t):
+    """
+    根据旋转和平移参数将图像坐标系下的Qc(Xc,Yc,Zc)转变成世界坐标系下的Qg(Xg,Yg,Zg)
+    """
+    Qg = (Qc - t.T) @ R
+    return Qg
 
 def computeRay(keypoints2d, invK, R, T):
     # 将点转为世界坐标系下plucker坐标

@@ -12,9 +12,11 @@ dataset:
       min_joints: 12
 
 affinity:
-  svt_py: True
+  svt_py: False
   aff_funcs:
-    "easymocap.affinity.ray.Affinity":
+#    "easymocap.affinity.ray.Affinity":
+#      MAX_DIST: 0.1
+    "easymocap.affinity.ray.EpiAffinity":
       MAX_DIST: 0.1
   svt_args:
     maxIter: 20

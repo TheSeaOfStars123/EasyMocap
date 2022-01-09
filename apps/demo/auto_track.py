@@ -18,7 +18,7 @@ if __name__ == "__main__":
     cfg = {
         'path': args.path,
         'out': args.out,
-        'WINDOW_SIZE': 10,
+        'WINDOW_SIZE': 5,
         'MIN_FRAMES': 10,
         'SMOOTH_SIZE': 5
     }

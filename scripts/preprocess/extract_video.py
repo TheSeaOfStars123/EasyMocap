@@ -36,7 +36,7 @@ def extract_video(videoname, path, start, end, step):
     video.release()
     return base
 
-def extract_2d(openpose, image, keypoints, render, args):
+def extract_2d(openpose, image, keypoints, heatmaps, render, args):
     skip = False
     if os.path.exists(keypoints):
         # check the number of images and keypoints
@@ -44,12 +44,13 @@ def extract_2d(openpose, image, keypoints, render, args):
             skip = True
     if not skip:
         os.makedirs(keypoints, exist_ok=True)
+        os.makedirs(heatmaps, exist_ok=True)
         if os.name != 'nt':
             cmd = './build/examples/openpose/openpose.bin --image_dir {} --write_json {} --display 0'.format(image, keypoints)
         else:
-            cmd = 'bin\\OpenPoseDemo.exe --image_dir {} --write_json {} --display 0'.format(join(os.getcwd(),image), join(os.getcwd(),keypoints))
-        if args.highres!=1:
-            cmd = cmd + ' --net_resolution -1x{}'.format(int(16*((368*args.highres)//16)))
+            # cmd = 'bin\\OpenPoseDemo.exe --image_dir {} --write_json {} --display 0'.format(join(os.getcwd(),image), join(os.getcwd(),keypoints))
+            cmd = 'bin\\OpenPoseDemo.exe --image_dir {} --keypoint_scale 1 --part_candidates --write_json {} --heatmaps_add_parts --heatmaps_add_PAFs --write_heatmaps {} --heatmaps_scale 0 --write_heatmaps_format float --display 0'.format(join(os.getcwd(),image), join(os.getcwd(),keypoints), join(os.getcwd(),heatmaps))
+            # cmd = cmd + ' --net_resolution -1x{}'.format(int(16*((368*args.highres)//16)))
         if args.handface:
             cmd = cmd + ' --hand --face'
         if args.render:
@@ -252,9 +253,9 @@ if __name__ == "__main__":
         image_path = join(args.path, 'images')
         os.makedirs(image_path, exist_ok=True)
         subs_image = sorted(os.listdir(image_path))
-        subs_videos = sorted(glob(join(args.path, 'videos', '*.mp4')))
+        subs_videos = sorted(glob(join(args.path, 'videos', '*.avi')))
         if len(subs_videos) > len(subs_image):
-            videos = sorted(glob(join(args.path, 'videos', '*.mp4')))
+            videos = sorted(glob(join(args.path, 'videos', '*.avi')))
             subs = []
             for video in videos:
                 basename = extract_video(video, args.path, start=args.start, end=args.end, step=args.step)
@@ -272,8 +273,9 @@ if __name__ == "__main__":
                         print('skip ', annot_root)
                         continue
                 if mode == 'openpose':
-                    extract_2d(args.openpose, image_root, 
-                        join(args.path, 'openpose', sub), 
+                    extract_2d(args.openpose, image_root,
+                        join(args.path, 'openpose', sub),
+                        join(args.path, 'output_heatmaps_folder', sub),
                         join(args.path, 'openpose_render', sub), args)
                     convert_from_openpose(
                         path_orig=args.path_origin,

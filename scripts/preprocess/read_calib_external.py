@@ -35,6 +35,15 @@ def read_shelf_calib():
     write_camera(cams, 'D:/Desktop/MOCAP/EasyMocap-master/0_input/20211105_Shelf')
 
 
+def check_shelf_mvpose():
+    """
+    根据mvpose项目中的camera_parameter.pickle检查标定参数
+    """
+    import pickle
+    f = open('D:/Desktop/MOCAP/MODEL_FOR_MVPOSE/camera_parameter_Shelf.pickle', 'rb+')
+    info = pickle.load(f)
+    print(info)
+
 def read_campus_calib():
     """
     对于campus数据集中给定的参数
@@ -77,4 +86,5 @@ def read_campus_calib():
 
 if __name__ == '__main__':
     # read_shelf_calib()
-    read_campus_calib()
+    # read_campus_calib()
+    check_shelf_mvpose()

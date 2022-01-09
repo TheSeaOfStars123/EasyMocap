@@ -16,7 +16,7 @@ out: 'none'
 body_model:
   module: "easymocap.visualize.skelmodel.SkelModel"
   args:
-    body_type: "body25"
+    body_type: "skel19"
     joint_radius: 0.02
 
 camera:

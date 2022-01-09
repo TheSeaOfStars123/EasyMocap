@@ -49,7 +49,7 @@ class BaseSocket:
         while (len(result) < l):
             t = sock.recv(l - len(result))
             result += t
-        return result.decode('ascii')
+        return result.decode('ascii').strip(b'\x00'.decode())
 
     def run(self):
         while True:

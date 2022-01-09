@@ -57,6 +57,6 @@ class ComposedAffinity:
         observe = np.ones_like(aff)
         aff = constrain * aff
         if self.cfg.svt_py:
-            aff = matchSVT(aff, dimGroups, constrain, observe, self.cfg.svt_args)
+            aff = matchSVT(aff, dimGroups, constrain, observe, self.cfg.svt_args, dual_stochastic_SVT=False)
         aff[aff<self.cfg.aff_min] = 0
         return aff, dimGroups
