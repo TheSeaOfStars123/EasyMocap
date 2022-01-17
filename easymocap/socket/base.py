@@ -50,6 +50,7 @@ class BaseSocket:
             t = sock.recv(l - len(result))
             result += t
         return result.decode('ascii').strip(b'\x00'.decode())
+        # return result.decode('unicode_escape').strip(b'\x00'.decode())
 
     def run(self):
         while True:

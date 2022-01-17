@@ -304,7 +304,7 @@ def load_coords_net_resolution_by_person_old(jsonname):
         coords.append(y_x_tuple)
     return origin_coords, coords
 
-def load_coords_net_resolution_by_person(origin_people_coords):
+def load_coords_net_resolution_by_person(origin_people_coords, net_resolution_X, net_resolution_Y):
     """
    origin_people_coords:(personNum, 25, 3)
    """
@@ -399,6 +399,53 @@ def save_txt_for_detection(origin_coords, origin_connection_all, f, write_type):
         for row in scores:
             f.writelines('\t'.join(str(i) for i in row) + '\n')
 
+# def save_txt_for_detection(origin_coords, origin_connection_all, s, write_type):
+#     coords_len = []
+#     for i, row in enumerate(origin_connection_all):
+#         for j, value in enumerate(row):
+#             if value < 0.1:
+#                 origin_connection_all[i][j] = 0
+#     # 写入候选关节信息
+#     if write_type == 0:
+#         for key, value in origin_coords.items():  # sum of joints
+#             '''
+#             key: str
+#             all_candidates_value: list{3n}
+#             '''
+#             # 是按照x1,y1,1_conf,x2,y2,2_conf来排列的
+#             # 如果要转化为network大小的(y1,y2)(x2,x1)
+#             all_candidates_value = np.array(value).reshape(-1, 3)
+#             all_candidates_value_T = all_candidates_value.T
+#             coords_len.append(len(all_candidates_value))
+#             s += str(len(all_candidates_value))+'\n'
+#             for row in all_candidates_value_T:
+#                 s += '\t'.join(str(i) for i in row)+'\n'
+#     else:
+#         for key, value in enumerate(origin_coords):  # sum of joints
+#             '''
+#             key: str
+#             all_candidates_value: list{3n}
+#             '''
+#             # 是按照x1,y1,1_conf,x2,y2,2_conf来排列的
+#             # 如果要转化为network大小的(y1,y2)(x2,x1)
+#             all_candidates_value = np.array(value).reshape(-1, 3)
+#             all_candidates_value_T = all_candidates_value.T
+#             coords_len.append(len(all_candidates_value))
+#             s += str(len(all_candidates_value))+'\n'
+#             for row in all_candidates_value_T:
+#                 s += '\t'.join(str(i) for i in row)+'\n'
+#
+#
+#     # 写入根据PAFs计算出来的分数
+#     for (idx1, idx2), (i, connect) in zip(ShelfPairs, enumerate(origin_connection_all)):
+#         candidate_joint_1 = coords_len[idx1]
+#         candidate_joint_2 = coords_len[idx2]
+#         scores = np.array(connect).reshape(candidate_joint_1, candidate_joint_2)
+#         for row in scores:
+#             s += '\t'.join(str(i) for i in row) + '\n'
+#
+#     return s
+
 
 def estimate_pose(heatMat, pafMat):
     """
@@ -450,8 +497,6 @@ def estimate_pose_by_given_part(origin_coords, coords, pafMat):
 
     return origin_connection_all, origin_coords
 
-net_resolution_X = 368
-net_resolution_Y = 368
 
 if __name__ == '__main__':
     # which = 17

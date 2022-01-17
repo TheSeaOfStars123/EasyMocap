@@ -179,8 +179,11 @@ class VisOpen3DSocket(BaseSocket):
             self.init_camera(camera_pose)
 
     def update(self):
-        if self.disconnect and not self.block:
+        # if self.disconnect and not self.block:
+        #     self.previous.clear()
+        if self.disconnect:
             self.previous.clear()
+            self.vis.destroy_window()
         if not self.queue.empty():
             if self.debug:log('Update' + str(self.queue.qsize()))
             datas = self.queue.get()
