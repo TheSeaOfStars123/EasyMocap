@@ -109,13 +109,17 @@ if __name__ == '__main__':
     parser.add_argument('path', type=str)
     parser.add_argument('--ext', type=str, default='.avi')
     parser.add_argument('--skel_path', type=str, default='D:/Desktop/4D_ASSOCIATION/4d_association_data/skel/SKEL19')
-    parser.add_argument('--out_path', type=str, default='D:/Desktop/4D_ASSOCIATION/4d_association_output/markless_multiview_data/seq_1')
+    parser.add_argument('--out_path', type=str)
     parser.add_argument('--openpose_demo', type=str, default='D:/Desktop/openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended/openpose/python')
     parser.add_argument('--vis_server_demo', type=str, default='python ../../apps/vis/vis_server.py --cfg ../../config/vis3d/o3d_scene.yml write True camera.cz 3. camera.cy 0.5')
     parser.add_argument('--association_demo', type=str, default='D:/Desktop/4D_ASSOCIATION/4d_association/x64/Release/mocap.exe')
+    parser.add_argument('--net_resolution', type=str, default='-1x224')
     args = parser.parse_args()
 
+    if args.out_path is None:
+        args.out_path = args.path
     detection_path = join(args.path, 'detections')
+    keypoints3d_path = join(args.out_path, 'keypoints3d')
     vis3d_path = join(args.out_path, 'vis3d')
     # 判断标定文件是否存在
     assert os.path.exists(join(args.path, 'calibration.json')), join(args.path, 'calibration.json')
@@ -127,6 +131,9 @@ if __name__ == '__main__':
         os.makedirs(detection_path)
     else:
         os.makedirs(detection_path)
+    # 创建keypoints文件夹
+    if not os.path.exists(keypoints3d_path):
+        os.makedirs(keypoints3d_path)
     # 创建vis3d文件夹
     if not os.path.exists(vis3d_path):
         os.makedirs(vis3d_path)
@@ -186,7 +193,7 @@ if __name__ == '__main__':
                     params["heatmaps_add_parts"] = True
                     params["heatmaps_add_PAFs"] = True
                     params["heatmaps_scale"] = 0
-                    params["net_resolution"] = "-1x160"
+                    params["net_resolution"] = args.net_resolution
                     # Starting OpenPose(AsynchronousOut)
                     opWrapper = op.WrapperPython(op.ThreadManagerMode.AsynchronousOut)
                     opWrapper.configure(params)
